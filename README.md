@@ -9,58 +9,46 @@ Crear un pipeline simple que despliegue una aplicación serverless automáticame
 ## 🏗️ Arquitectura
 
 ```
-GitHub → CodePipeline → CodeBuild (tests) → CodeDeploy → Lambda
+GitHub → CodePipeline → CodeBuild (tests + deploy) → Lambda
 ```
 
 ## 📦 Componentes
 
 - **GitHub**: Repositorio de código
 - **CodePipeline**: Orquestación del pipeline
-- **CodeBuild**: Ejecución de tests y build
-- **CodeDeploy**: Despliegue de Lambda
+- **CodeBuild**: Ejecución de tests y despliegue
 - **Lambda**: Función serverless (Node.js)
 
-## 🚀 Setup Rápido
-
-### 1. Crear la Lambda manualmente (primera vez)
+## 🚀 Setup Automático
 
 ```bash
-aws lambda create-function \
-  --function-name DevOpsDemoFunction \
-  --runtime nodejs18.x \
-  --role arn:aws:iam::ACCOUNT_ID:role/lambda-execution-role \
-  --handler index.handler \
-  --zip-file fileb://function.zip
+./setup-infrastructure.sh
 ```
 
-### 2. Crear el Pipeline
+Este script crea:
+- ✅ Función Lambda
+- ✅ Roles IAM necesarios
+- ✅ Bucket S3 para artefactos
+- ✅ Proyecto CodeBuild
 
-El pipeline se puede crear desde la consola de AWS CodePipeline:
+## 🔗 Crear Conexión GitHub
 
-**Source Stage:**
-- Provider: GitHub (Version 2)
-- Repository: tu-usuario/start-with-devops
-- Branch: main
+1. Ve a: https://console.aws.amazon.com/codesuite/settings/connections
+2. Click **"Create connection"**
+3. Selecciona **GitHub** → Autoriza
+4. Copia el ARN de la conexión
 
-**Build Stage:**
-- Provider: CodeBuild
-- Buildspec: buildspec.yml
+## 🚀 Crear Pipeline
 
-**Deploy Stage:**
-- Provider: CodeDeploy
-- Application: Lambda
-- Deployment Group: DevOpsDemoFunction
-
-### 3. Hacer un cambio y push
+El pipeline ya está configurado. Solo necesitas:
 
 ```bash
-# Modificar src/index.js
-git add .
-git commit -m "Update: nueva versión"
+# El pipeline se crea automáticamente al hacer push
 git push origin main
 ```
 
-El pipeline se ejecutará automáticamente y desplegará los cambios.
+**Ver pipeline:**
+https://console.aws.amazon.com/codesuite/codepipeline/pipelines/DevOpsDemoPipeline/view
 
 ## 📁 Estructura del Proyecto
 
@@ -70,9 +58,7 @@ start-with-devops/
 │   └── index.js          # Lambda function
 ├── tests/
 │   └── index.test.js     # Tests
-├── buildspec.yml         # Config CodeBuild
-├── appspec.yml           # Config CodeDeploy
-├── template.yml          # SAM template
+├── buildspec.yml         # Config CodeBuild (tests + deploy)
 └── package.json          # Dependencias
 ```
 
@@ -83,18 +69,38 @@ npm install
 npm test
 ```
 
-## 📝 Notas para la Demo
+## 🎤 Demo en Vivo
 
-1. Mostrar el código de la Lambda (simple y claro)
-2. Explicar buildspec.yml (fases: install, test, build)
-3. Mostrar el pipeline en la consola
-4. Hacer un cambio en vivo
-5. Ver cómo el pipeline se ejecuta automáticamente
-6. Verificar el despliegue de la Lambda
+### 1. Mostrar el código
+```bash
+code src/index.js      # Lambda simple
+code buildspec.yml     # Pipeline as code
+```
+
+### 2. Hacer un cambio
+```javascript
+// En src/index.js
+message: '¡Hola DevOps! VERSIÓN 2.0 - Demo en vivo',
+version: '2.0.0'
+```
+
+### 3. Push y observar
+```bash
+git add src/index.js
+git commit -m "Demo: versión 2.0"
+git push origin main
+```
+
+### 4. Verificar
+```bash
+aws lambda invoke --region us-east-1 \
+  --function-name DevOpsDemoFunction \
+  response.json && cat response.json | jq
+```
 
 ## 🎓 Conceptos Clave
 
-- **CI/CD**: Integración y despliegue continuos
-- **Pipeline as Code**: buildspec.yml, appspec.yml
+- **CI/CD**: De código a producción automáticamente
+- **Pipeline as Code**: buildspec.yml versionado
 - **Serverless**: Sin gestión de servidores
-- **Automatización**: De commit a producción sin intervención manual
+- **Automatización Total**: git push → tests → deploy

@@ -56,15 +56,17 @@ aws lambda list-versions-by-function \
 
 ```bash
 # Ver estado del pipeline
-aws codepipeline get-pipeline-state \
-  --name DevOpsDemoPipeline
+aws codepipeline get-pipeline-state --region us-east-1 \
+  --name DevOpsDemoPipeline \
+  --query 'stageStates[*].[stageName,latestExecution.status]' \
+  --output table
 
 # Ver ejecuciones
-aws codepipeline list-pipeline-executions \
+aws codepipeline list-pipeline-executions --region us-east-1 \
   --pipeline-name DevOpsDemoPipeline
 
 # Iniciar pipeline manualmente
-aws codepipeline start-pipeline-execution \
+aws codepipeline start-pipeline-execution --region us-east-1 \
   --name DevOpsDemoPipeline
 ```
 
@@ -72,12 +74,13 @@ aws codepipeline start-pipeline-execution \
 
 ```bash
 # Ver builds
-aws codebuild list-builds-for-project \
+aws codebuild list-builds-for-project --region us-east-1 \
   --project-name DevOpsDemoBuild
 
-# Ver logs de un build
-aws codebuild batch-get-builds \
-  --ids BUILD_ID
+# Ver último build
+aws codebuild list-builds-for-project --region us-east-1 \
+  --project-name DevOpsDemoBuild \
+  --max-items 1
 ```
 
 ## Testing Local

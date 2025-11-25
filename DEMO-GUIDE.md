@@ -7,27 +7,14 @@
    ./setup-infrastructure.sh
    ```
 
-2. **Subir el código a GitHub:**
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit: Demo DevOps"
-   git branch -M main
-   git remote add origin https://github.com/TU-USUARIO/start-with-devops.git
-   git push -u origin main
-   ```
+2. **Crear conexión GitHub:**
+   - Ve a: https://console.aws.amazon.com/codesuite/settings/connections
+   - Create connection → GitHub → Autoriza
+   - Copia el ARN
 
-3. **Crear el Pipeline en AWS Console:**
-   - Ir a CodePipeline → Create Pipeline
-   - Nombre: `DevOpsDemoPipeline`
-   - Source: GitHub (Version 2) → Conectar repo
-   - Build: CodeBuild → Create project
-     - Nombre: `DevOpsDemoBuild`
-     - Environment: Managed image, Ubuntu, Standard, nodejs:18
-     - Buildspec: Use buildspec file
-   - Deploy: CodeDeploy
-     - Application: `DevOpsDemoApp`
-     - Deployment group: Crear nuevo con Lambda
+3. **Verificar que el pipeline existe:**
+   - https://console.aws.amazon.com/codesuite/codepipeline/pipelines/DevOpsDemoPipeline/view
+   - Debe tener 2 etapas: Source y BuildAndDeploy
 
 ---
 
