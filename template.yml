@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Demo DevOps - Lambda con CI/CD
+
+Resources:
+  DevOpsDemoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: DevOpsDemoFunction
+      Handler: index.handler
+      Runtime: nodejs18.x
+      CodeUri: src/
+      MemorySize: 128
+      Timeout: 10
+      AutoPublishAlias: live
+      DeploymentPreference:
+        Type: AllAtOnce
+
+Outputs:
+  FunctionArn:
+    Description: ARN de la función Lambda
+    Value: !GetAtt DevOpsDemoFunction.Arn
+  FunctionName:
+    Description: Nombre de la función
+    Value: !Ref DevOpsDemoFunction

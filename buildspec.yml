@@ -1,0 +1,26 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18
+    commands:
+      - echo "Instalando dependencias..."
+      - npm install
+  
+  pre_build:
+    commands:
+      - echo "Ejecutando tests..."
+      - npm test
+  
+  build:
+    commands:
+      - echo "Build completado"
+      - echo "Preparando artefactos para despliegue..."
+
+artifacts:
+  files:
+    - src/**/*
+    - appspec.yml
+    - scripts/**/*
+  name: BuildArtifact

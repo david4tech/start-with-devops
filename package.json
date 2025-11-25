@@ -1,0 +1,11 @@
+{
+  "name": "devops-demo",
+  "version": "1.0.0",
+  "description": "Demo CI/CD con AWS DevTools",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
