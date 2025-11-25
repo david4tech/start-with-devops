@@ -7,7 +7,6 @@ phases:
     commands:
       - echo "Instalando dependencias..."
       - npm install
-      - pip3 install aws-sam-cli
   
   pre_build:
     commands:
@@ -17,10 +16,15 @@ phases:
   build:
     commands:
       - echo "Build completado"
-      - echo "Empaquetando con SAM..."
-      - sam package --template-file template.yml --s3-bucket devops-demo-pipeline-artifacts-030901817847 --output-template-file packaged.yml
+      - echo "Empaquetando Lambda..."
+      - cd src && zip -r ../function.zip . && cd ..
+      - echo "Actualizando función Lambda..."
+      - aws lambda update-function-code --function-name DevOpsDemoFunction --zip-file fileb://function.zip --region us-east-1
+      - echo "Esperando actualización..."
+      - aws lambda wait function-updated --function-name DevOpsDemoFunction --region us-east-1
+      - echo "✅ Lambda actualizada exitosamente"
 
 artifacts:
   files:
-    - packaged.yml
+    - function.zip
   name: BuildArtifact
