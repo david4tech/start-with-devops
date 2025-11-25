@@ -45,7 +45,30 @@ aws lambda create-function \
 
 rm src/function.zip
 
-# 3. Crear aplicación CodeDeploy
+# 3. Crear Function URL
+echo "🌐 Creando Function URL..."
+aws lambda create-function-url-config --region us-east-1 \
+  --function-name $FUNCTION_NAME \
+  --auth-type NONE \
+  --cors '{
+    "AllowOrigins": ["*"],
+    "AllowMethods": ["GET", "POST"],
+    "AllowHeaders": ["*"],
+    "MaxAge": 86400
+  }' 2>/dev/null || echo "Function URL ya existe"
+
+aws lambda add-permission --region us-east-1 \
+  --function-name $FUNCTION_NAME \
+  --statement-id FunctionURLAllowPublicAccess \
+  --action lambda:InvokeFunctionUrl \
+  --principal "*" \
+  --function-url-auth-type NONE 2>/dev/null || echo "Permisos ya configurados"
+
+FUNCTION_URL=$(aws lambda get-function-url-config --region us-east-1 \
+  --function-name $FUNCTION_NAME \
+  --query 'FunctionUrl' --output text)
+
+# 4. Crear aplicación CodeDeploy
 echo "🚢 Configurando CodeDeploy..."
 aws deploy create-application \
   --application-name DevOpsDemoApp \
@@ -70,6 +93,8 @@ aws iam attach-role-policy \
 echo ""
 echo "✅ Infraestructura base creada!"
 echo ""
+echo "🌐 Function URL: $FUNCTION_URL"
+echo ""
 echo "📋 Próximos pasos:"
 echo "1. Crea conexión GitHub:"
 echo "   https://console.aws.amazon.com/codesuite/settings/connections"
@@ -80,4 +105,4 @@ echo ""
 echo "3. Haz un 'git push' y observa la magia!"
 echo ""
 echo "🧪 Probar Lambda:"
-echo "aws lambda invoke --region us-east-1 --function-name DevOpsDemoFunction response.json && cat response.json | jq"
+echo "curl $FUNCTION_URL"

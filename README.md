@@ -93,10 +93,16 @@ git push origin main
 
 ### 4. Verificar
 ```bash
+# Opción 1: Invocar directamente
 aws lambda invoke --region us-east-1 \
   --function-name DevOpsDemoFunction \
   response.json && cat response.json | jq
+
+# Opción 2: Usar Function URL (público)
+curl https://sdxqiuxrvldh4xjzbw75czxe740lmxld.lambda-url.us-east-1.on.aws/
 ```
+
+**Function URL:** https://sdxqiuxrvldh4xjzbw75czxe740lmxld.lambda-url.us-east-1.on.aws/
 
 ## 🎓 Conceptos Clave
 

@@ -44,11 +44,14 @@ aws lambda invoke \
 # Ver respuesta
 cat response.json | jq
 
+# Probar con Function URL (público)
+curl https://sdxqiuxrvldh4xjzbw75czxe740lmxld.lambda-url.us-east-1.on.aws/
+
 # Ver logs
 aws logs tail /aws/lambda/DevOpsDemoFunction --follow
 
-# Ver versiones
-aws lambda list-versions-by-function \
+# Ver configuración de Function URL
+aws lambda get-function-url-config \
   --function-name DevOpsDemoFunction
 ```
 

@@ -72,10 +72,15 @@ git push origin main
 ### Minuto 10: Verificar
 "Vamos a probar que funciona"
 
-**Invocar Lambda:**
+**Opción 1 - AWS CLI:**
 ```bash
 aws lambda invoke --function-name DevOpsDemoFunction response.json
 cat response.json
+```
+
+**Opción 2 - Navegador (más visual para la demo):**
+```
+https://sdxqiuxrvldh4xjzbw75czxe740lmxld.lambda-url.us-east-1.on.aws/
 ```
 
 **Mostrar el resultado:**
