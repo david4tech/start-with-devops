@@ -7,6 +7,7 @@ phases:
     commands:
       - echo "Instalando dependencias..."
       - npm install
+      - pip3 install aws-sam-cli
   
   pre_build:
     commands:
@@ -16,11 +17,10 @@ phases:
   build:
     commands:
       - echo "Build completado"
-      - echo "Preparando artefactos para despliegue..."
+      - echo "Empaquetando con SAM..."
+      - sam package --template-file template.yml --s3-bucket devops-demo-pipeline-artifacts-030901817847 --output-template-file packaged.yml
 
 artifacts:
   files:
-    - src/**/*
-    - appspec.yml
-    - scripts/**/*
+    - packaged.yml
   name: BuildArtifact
