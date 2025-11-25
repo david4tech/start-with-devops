@@ -1,9 +1,9 @@
 version: 0.0
 Resources:
-  - MyFunction:
+  - DevOpsDemoFunction:
       Type: AWS::Lambda::Function
       Properties:
         Name: "DevOpsDemoFunction"
         Alias: "live"
-        CurrentVersion: "1"
-        TargetVersion: "2"
+        CurrentVersion: "$LATEST"
+        TargetVersion: "$LATEST"
