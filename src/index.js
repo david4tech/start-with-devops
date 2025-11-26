@@ -2,7 +2,7 @@ exports.handler = async (event) => {
     const response = {
         statusCode: 200,
         body: JSON.stringify({
-            message: '¡Hola DevOps! Desplegado automáticamente desde GitHub',
+            message: '¡Hola! Desplegado automáticamente desde GitHub',
             timestamp: new Date().toISOString(),
             version: '1.0.0'
         })
